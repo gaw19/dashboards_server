@@ -1,0 +1,12 @@
+---
+version: "2"
+
+services:
+  dashboards:
+    image: registry.cn-hangzhou.aliyuncs.com/ghoome/jupyter_dashboards:0.1
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - '3000:3000'
+      - '3001:3001'
