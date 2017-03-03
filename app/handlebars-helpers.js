@@ -74,6 +74,16 @@ module.exports = {
         return url.split('/').pop();
     },
 
+    nbAlias:function (url) {
+        var filename = url.split('/').pop();
+        var alias = config.get('NB_ALIAS');
+        if(alias){
+            return alias[filename] ? alias[filename]: filename;
+        }else{
+            return filename;
+        }
+    },
+
     urlJoin: function() {
         // need varargs but Handlebars adds an arg to the end, so slice it off
         var args = Array.apply(null, arguments).slice(0, arguments.length-1);

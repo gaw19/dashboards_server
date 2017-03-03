@@ -15,7 +15,7 @@
   "bin": {
     "jupyter-dashboards-server": "./bin/jupyter-dashboards-server",
     "jupyter-dashboards-admin": "./bin/jupyter-dashboards-admin"
-   },
+  },
   "scripts": {
     "build": "gulp build",
     "start": "node ./bin/jupyter-dashboards-server",
@@ -45,6 +45,7 @@
     "fs-extra": "^0.26.5",
     "hjson": "^1.7.4",
     "http-proxy": "^1.12.0",
+    "js-yaml": "^3.8.2",
     "jupyter-js-services": "0.15.x",
     "jupyter-js-widgets": "1.2.x",
     "jupyterlab": "0.1.1",

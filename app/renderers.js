@@ -26,7 +26,7 @@ var removePrefix = config.get('REMOVE_PREFIX');
 
 function _renderList(req, res, next) {
     var listPath = req.params[0] || '';
-    nbstore.list(listPath).then(
+    nbstore.list(req.user, listPath).then(
         function success(list) {
             // check each item to determine if a file or directory
             var statPromises = list.map(function(filename) {
@@ -88,7 +88,7 @@ function _renderDashboard(req, res, next, opts) {
     var hideChrome = !!(opts && opts.hideChrome);
     var stats = (opts && opts.stats) || nbfs.stat(dbpath);
 
-    return nbstore.get(dbpath, stats)
+    return nbstore.get(req.user, dbpath, stats)
         .then(function success(notebook) {
             debug('Success loading nb');
 

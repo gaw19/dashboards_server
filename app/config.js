@@ -6,6 +6,7 @@ var nconf = require('nconf');
 var hjson = require('hjson');
 var path = require('path');
 var fs = require('fs');
+var yaml = require('js-yaml');
 var crypto = require('crypto');
 var debug = require('debug')('dashboard-proxy:config');
 var urljoin = require('url-join');
@@ -53,6 +54,22 @@ var hasUsername = !!config.get('USERNAME');
 var hasPassword = !!config.get('PASSWORD');
 if (hasUsername && hasPassword && !config.get('AUTH_STRATEGY')) {
     config.set('AUTH_STRATEGY', './app/auth-local');
+}
+
+var conf_yml_location = config.get('CONF_YML');
+if (conf_yml_location){
+    if(!fs.existsSync(conf_yml_location)) {
+        throw new Error('Invalid file path for CONF_YML');
+    }
+    var confYml = yaml.safeLoad(fs.readFileSync(config.get('CONF_YML'), 'utf8'))
+    if(confYml['users']){
+        config.set('AUTH_STRATEGY', './app/auth-local-yml');
+        config.set('USERS', confYml['users']);
+    }
+    if(confYml['group_auth'])
+        config.set('GROUP_AUTH', confYml['group_auth']);
+    if(confYml['nb_alias'])
+        config.set('NB_ALIAS', confYml['nb_alias']);
 }
 
 // build the full path to the data directory
