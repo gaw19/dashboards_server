@@ -10,6 +10,7 @@ var yaml = require('js-yaml');
 var crypto = require('crypto');
 var debug = require('debug')('dashboard-proxy:config');
 var urljoin = require('url-join');
+var mongoose = require('mongoose');
 
 // Config defaults are in an HJSON file in the root of the source tree
 var defaultConfig = path.join(__dirname, '..', 'config.json');
@@ -56,20 +57,15 @@ if (hasUsername && hasPassword && !config.get('AUTH_STRATEGY')) {
     config.set('AUTH_STRATEGY', './app/auth-local');
 }
 
-var conf_yml_location = config.get('CONF_YML');
-if (conf_yml_location){
-    if(!fs.existsSync(conf_yml_location)) {
-        throw new Error('Invalid file path for CONF_YML');
-    }
-    var confYml = yaml.safeLoad(fs.readFileSync(config.get('CONF_YML'), 'utf8'))
-    if(confYml['users']){
-        config.set('AUTH_STRATEGY', './app/auth-local-yml');
-        config.set('USERS', confYml['users']);
-    }
-    if(confYml['group_auth'])
-        config.set('GROUP_AUTH', confYml['group_auth']);
-    if(confYml['nb_alias'])
-        config.set('NB_ALIAS', confYml['nb_alias']);
+if (config.get('AUTH_STRATEGY') == 'MONGO') {
+    config.set('AUTH_STRATEGY', './app/auth-mongo');
+    mongoose.connect('mongodb://lottery:ae86wop@localhost/lottery', function(err) {
+        if (err) {
+            console.log('Could not connect to mongodb on localhost. Ensure that you have mongodb running on localhost and mongodb accepts connections on standard ports!');
+        }else{
+            console.log('connect to mongodb');
+        }
+    });
 }
 
 // build the full path to the data directory
