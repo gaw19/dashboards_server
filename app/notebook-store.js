@@ -57,7 +57,7 @@ function _list(user, dir) {
                 reject(new Error('Error reading path: ' + dbpath));
             } else {
                 files = files.filter(function(f) {
-                    if(user.group)
+                    if(user && 'group' in user)
                         return user.filterFile( f);
                     return /^[^.]/.test(f); // not hidden
                 });
@@ -68,7 +68,7 @@ function _list(user, dir) {
 }
 
 function _get(user, nbpath, stats) {
-    if(user.group){
+    if(user && 'group' in user){
         if(!user.filterFile(nbpath.split('/').pop())){
             console.log('reject');
             return Promise.reject('Error getting notebook info: ' + nbpath);

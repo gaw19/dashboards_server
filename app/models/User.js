@@ -15,10 +15,6 @@ userSchema.methods.comparePassword = function comparePassword(candidatePassword,
 };
 
 userSchema.methods.filterFile = function filterFile(f) {
-    console.log('user-name', this.name);
-    console.log('user-group', this.group);
-    console.log('user-group-name', this.group.name);
-    console.log('user-group-filter_regex', this.group.filter_regex);
     if(!this.group || !this.group.filter_regex)
         return false;
     var regExps = this.group.filter_regex;

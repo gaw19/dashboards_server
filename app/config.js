@@ -6,7 +6,6 @@ var nconf = require('nconf');
 var hjson = require('hjson');
 var path = require('path');
 var fs = require('fs');
-var yaml = require('js-yaml');
 var crypto = require('crypto');
 var debug = require('debug')('dashboard-proxy:config');
 var urljoin = require('url-join');
@@ -58,11 +57,13 @@ if (hasUsername && hasPassword && !config.get('AUTH_STRATEGY')) {
     config.set('AUTH_STRATEGY', './app/auth-local');
 }
 
-if (config.get('AUTH_STRATEGY') == 'MONGO') {
+var mongoUrl = config.get('MONGO_URL');
+console.log('mongourl' + mongoUrl);
+if (mongoUrl) {
     config.set('AUTH_STRATEGY', './app/auth-mongo');
-    mongoose.connect('mongodb://lottery:ae86wop@localhost/lottery', function(err) {
+    mongoose.connect(mongoUrl, function(err) {
         if (err) {
-            console.log('Could not connect to mongodb!');
+            console.log('Could not connect to mongodb!' + mongoUrl);
         }else{
             // console.log('connect to mongodb');
             FileAlias.find().lean().exec(function (err, docs) {
