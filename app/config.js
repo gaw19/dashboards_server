@@ -11,6 +11,7 @@ var crypto = require('crypto');
 var debug = require('debug')('dashboard-proxy:config');
 var urljoin = require('url-join');
 var mongoose = require('mongoose');
+var FileAlias = require('./models/FileAlias');
 
 // Config defaults are in an HJSON file in the root of the source tree
 var defaultConfig = path.join(__dirname, '..', 'config.json');
@@ -61,9 +62,18 @@ if (config.get('AUTH_STRATEGY') == 'MONGO') {
     config.set('AUTH_STRATEGY', './app/auth-mongo');
     mongoose.connect('mongodb://lottery:ae86wop@localhost/lottery', function(err) {
         if (err) {
-            console.log('Could not connect to mongodb on localhost. Ensure that you have mongodb running on localhost and mongodb accepts connections on standard ports!');
+            console.log('Could not connect to mongodb!');
         }else{
-            console.log('connect to mongodb');
+            // console.log('connect to mongodb');
+            FileAlias.find().lean().exec(function (err, docs) {
+               if(docs){
+                   var aliasDict = docs.reduce(function(map, obj) {
+                       map[obj.name] = obj.alias;
+                       return map;
+                   }, {});
+                   config.set('NB_ALIAS', aliasDict);
+               }
+            });
         }
     });
 }
