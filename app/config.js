@@ -9,6 +9,8 @@ var fs = require('fs');
 var crypto = require('crypto');
 var debug = require('debug')('dashboard-proxy:config');
 var urljoin = require('url-join');
+var mongoose = require('mongoose');
+var FileAlias = require('./models/FileAlias');
 
 // Config defaults are in an HJSON file in the root of the source tree
 var defaultConfig = path.join(__dirname, '..', 'config.json');
@@ -53,6 +55,28 @@ var hasUsername = !!config.get('USERNAME');
 var hasPassword = !!config.get('PASSWORD');
 if (hasUsername && hasPassword && !config.get('AUTH_STRATEGY')) {
     config.set('AUTH_STRATEGY', './app/auth-local');
+}
+
+var mongoUrl = config.get('MONGO_URL');
+console.log('mongourl' + mongoUrl);
+if (mongoUrl) {
+    config.set('AUTH_STRATEGY', './app/auth-mongo');
+    mongoose.connect(mongoUrl, function(err) {
+        if (err) {
+            console.log('Could not connect to mongodb!' + mongoUrl);
+        }else{
+            // console.log('connect to mongodb');
+            FileAlias.find().lean().exec(function (err, docs) {
+               if(docs){
+                   var aliasDict = docs.reduce(function(map, obj) {
+                       map[obj.name] = obj.alias;
+                       return map;
+                   }, {});
+                   config.set('NB_ALIAS', aliasDict);
+               }
+            });
+        }
+    });
 }
 
 // build the full path to the data directory
