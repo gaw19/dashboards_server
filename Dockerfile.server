@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM node:6.9
+FROM node:5.5
 
 USER root
 
@@ -18,7 +18,8 @@ RUN apt-get update && \
     libnotify4 \
     libgconf2-4 \
     dbus-x11 \
-    xvfb
+    xvfb \
+    libkrb5-dev
 
 # for debugging purposes, setup node-inspector
 RUN npm install -g node-inspector

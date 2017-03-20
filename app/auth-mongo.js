@@ -40,16 +40,16 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/setPassword', function(req, res) {
-        if(req.user) {
-            return res.redirect('/');
-        }
-        res.render('login', {
-            title: 'Log in',
-            formAuth: true,
-            authError: !!req.flash('error').length
-        });
-    });
+    // app.get('/setPassword', function(req, res) {
+    //     if(req.user) {
+    //         return res.redirect('/');
+    //     }
+    //     res.render('login', {
+    //         title: 'Log in',
+    //         formAuth: true,
+    //         authError: !!req.flash('error').length
+    //     });
+    // });
 
     // Validate login values
     app.post('/login', urlencodedParser, passport.authenticate('local', {
