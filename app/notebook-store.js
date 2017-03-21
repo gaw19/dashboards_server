@@ -48,7 +48,7 @@ function _loadNb(nbpath, stats) {
         });
 }
 
-function _list(dir) {
+function _list(user, dir) {
     // list all (not hidden) children of the specified directory
     // (within the data directory)
     var dbpath = path.join(DATA_DIR, dir || '');
@@ -58,15 +58,23 @@ function _list(dir) {
                 reject(new Error('Error reading path: ' + dbpath));
             } else {
                 files = files.filter(function(f) {
-                        return /^[^.]/.test(f); // not hidden
-                    });
+                    if(user && 'group' in user)
+                        return user.filterFile( f);
+                    return /^[^.]/.test(f); // not hidden
+                });
                 resolve(files);
             }
         });
     });
 }
 
-function _get(nbpath, stats) {
+function _get(user, nbpath, stats) {
+    if(user && 'group' in user){
+        if(!user.filterFile(nbpath.split('/').pop())){
+            console.log('reject');
+            return Promise.reject('Error getting notebook info: ' + nbpath);
+        }
+    }
     if (_cache.hasOwnProperty(nbpath)) {
         return Promise.resolve(_cache[nbpath]);
     } else {
