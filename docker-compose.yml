@@ -2,11 +2,34 @@
 version: "2"
 
 services:
-  dashboards:
-    image: registry.cn-hangzhou.aliyuncs.com/ghoome/jupyter_dashboards:0.1
+  analyser-kernel:
+    image: registry.cn-hangzhou.aliyuncs.com/ghoome/analyser_kernel:1.2
+    ports:
+      - '8889:8889'
+    expose:
+      - '8889'
+    command:
+      - jupyter
+      - kernelgateway
+      - '--KernelGatewayApp.ip=0.0.0.0'
+      - '--KernelGatewayApp.port=8889'
+    restart: always
+    environment:
+      - KG_ALLOW_ORIGIN='*'
+
+  analyser-dashboards:
+    image: dashboard:latest
     build:
       context: .
       dockerfile: Dockerfile.server
     ports:
       - '3000:3000'
       - '3001:3001'
+    depends_on:
+      - analyser-kernel
+    links:
+      - analyser-kernel
+    environment:
+      - PORT=3000
+      - 'KERNEL_GATEWAY_URL=http://analyser-kernel:8889'
+      - IP=0.0.0.0
