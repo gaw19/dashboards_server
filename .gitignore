@@ -7,3 +7,4 @@ public/urth_components/
 data/demo/
 data/test/
 *.log
+.idea
