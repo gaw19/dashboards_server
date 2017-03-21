@@ -19,9 +19,6 @@ services:
 
   analyser-dashboards:
     image: dashboard:latest
-    build:
-      context: .
-      dockerfile: Dockerfile.server
     ports:
       - '3000:3000'
       - '3001:3001'
