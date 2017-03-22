@@ -3,6 +3,7 @@
 
 FROM server
 
+USER root
 RUN npm config set unsafe-perm true
 
 # npm install the dashboard server app
