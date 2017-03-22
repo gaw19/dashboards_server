@@ -49,7 +49,7 @@ function _loadNb(nbpath, stats) {
 }
 
 // by xsj
-function _list(user, dir) {
+function _list(dir, user) {
     // list all (not hidden) children of the specified directory
     // (within the data directory)
     var dbpath = path.join(DATA_DIR, dir || '');
@@ -71,14 +71,14 @@ function _list(user, dir) {
 }
 
 // by xsj
-function _get(nbpath, stats) {
+function _get(nbpath, stats, user) {
     // by xsj
-    // if(user && 'group' in user){
-    //     if(!user.filterFile(nbpath.split('/').pop())){
-    //         console.log('reject');
-    //         return Promise.reject('Error getting notebook info: ' + nbpath);
-    //     }
-    // }
+    if(user && 'group' in user){
+        if(!user.filterFile(nbpath.split('/').pop())){
+            console.log('reject');
+            return Promise.reject('Error getting notebook info: ' + nbpath);
+        }
+    }
     if (_cache.hasOwnProperty(nbpath)) {
         return Promise.resolve(_cache[nbpath]);
     } else {

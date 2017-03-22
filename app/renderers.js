@@ -23,7 +23,8 @@ var NO_LAYOUT = 'no-layout';
 
 function _renderList(req, res, next) {
     var listPath = req.params[0] || '';
-    nbstore.list(req.user, listPath).then(
+    // by xsj
+    nbstore.list(listPath, req.user).then(
         function success(list) {
             // check each item to determine if a file or directory
             var statPromises = list.map(function(filename) {
@@ -85,7 +86,7 @@ function _renderDashboard(req, res, next, opts) {
     var stats = (opts && opts.stats) || nbfs.stat(dbpath);
 
     // by xsj
-    return nbstore.get(dbpath, stats)
+    return nbstore.get(dbpath, stats, req.user)
         .then(function success(notebook) {
             debug('Success loading nb');
 

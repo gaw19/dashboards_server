@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
-    name: { type: String, unique: true },
+    username: { type: String, unique: true },
     password: String,
     group : { type: Schema.Types.ObjectId, ref: 'dashboard_group' }
 }, { timestamps: true });

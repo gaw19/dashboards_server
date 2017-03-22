@@ -186,7 +186,7 @@ router.post('/kernels', bodyParser.json({ type: 'text/plain' }), function(req, r
     // Retrieve notebook from store to pull out kernel name. Use this value instead
     // of that supplied by client (trust local notebook over client info).
     // by xsj
-    nbstore.get(notebookPath)
+    nbstore.get(notebookPath, null, req.user)
         .then(function success(notebook) {
             if (notebook.metadata.kernelspec && notebook.metadata.kernelspec.name) {
                 var kernelName = notebook.metadata.kernelspec.name;

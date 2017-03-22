@@ -60,20 +60,18 @@ module.exports = function(app) {
 
     // Local auth strategy compares against shared auth creds set in the config
     // at server start time
-    return (new LocalStrategy(function(name, password, done) {
-        console.log('name:' + name + '  pwd:' + password);
-        User.findOne({ name: name}).populate('group').exec(function(err, user){
-            console.log('find name:' + name);
+    return (new LocalStrategy(function(username, password, done) {
+        console.log('username:' + username + '  pwd:' + password);
+        User.findOne({ username: username}).populate('group').exec(function(err, user){
+            console.log('find username:' + username);
             if (err) { return done(err); }
             if (!user) {
-                console.log('Not find name:' + name);
-                return done(null, false, { message: 'name not found.' });
+                console.log('Not find username:' + username);
+                return done(null, false, { message: 'username not found.' });
             }
             user.comparePassword(password, function(err, isMatch){
-                if (err) {return done(null, false, { message: 'name not found.' }); }
+                if (err) {return done(null, false, { message: 'username not found.' }); }
                 if (isMatch) {
-                    console.log('user-group', user.group);
-                    console.log('user-group-name', user.group.name);
                     return done(null, user);
                 }else{
                     console.log('Invalid password.' + password);
