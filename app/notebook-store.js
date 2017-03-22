@@ -49,7 +49,7 @@ function _loadNb(nbpath, stats) {
 }
 
 // by xsj
-function _list(dir) {
+function _list(user, dir) {
     // list all (not hidden) children of the specified directory
     // (within the data directory)
     var dbpath = path.join(DATA_DIR, dir || '');
@@ -60,8 +60,8 @@ function _list(dir) {
             } else {
                 files = files.filter(function(f) {
                     // by xsj
-                    // if(user && 'group' in user)
-                    //     return user.filterFile( f);
+                    if(user && 'group' in user)
+                        return user.filterFile( f);
                     return /^[^.]/.test(f); // not hidden
                 });
                 resolve(files);
