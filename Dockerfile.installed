@@ -1,11 +1,12 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM jupyter-incubator/dashboard-server
+FROM server
+
+RUN npm config set unsafe-perm true
 
 # npm install the dashboard server app
-RUN cd /home/node && npm install --quiet ./app
+RUN cd /home/node && npm install -g --quiet ./app
 WORKDIR /home/node
 
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["./node_modules/.bin/jupyter-dashboards-server"]
+ENTRYPOINT ["jupyter-dashboards-server"]

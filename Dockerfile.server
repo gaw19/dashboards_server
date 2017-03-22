@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM node:5.5
+FROM node:6.9
 
 USER root
 
@@ -23,7 +23,7 @@ RUN apt-get update && \
 # for debugging purposes, setup node-inspector
 RUN npm install -g node-inspector
 # add an unprivileged node user
-RUN useradd -ms /bin/bash node
+# RUN useradd -ms /bin/bash node
 
 USER node
 RUN mkdir -p /home/node/app/ext
